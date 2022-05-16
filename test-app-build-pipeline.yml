@@ -1,0 +1,21 @@
+variables:
+   projectRoot: ""
+stages:
+  - stage: run
+    displayName: Build and Run
+    jobs:
+      - job: build
+        pool:
+          vmImage: 'Ubuntu 20.04'
+        variables:
+          GRADLE_USER_HOME: $(Pipeline.Workspace)/.gradle
+        steps:
+          - checkout: self
+          - task: Gradle@2
+            inputs:
+              gradleWrapperFile: './${{ variables.projectRoot}}/gradlew'
+              cwd: './${{ variables.projectRoot}}'
+              tasks: ':bootRun'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '17'
+              gradleOptions: '-Xmx1g'
